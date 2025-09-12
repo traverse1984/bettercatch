@@ -24,6 +24,10 @@
   "author": "Matthew Wilson",
   "license": "MIT",
   "description": "Improve how you handle caught errors, or avoid them entirely with a safe execution wrapper.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/traverse1984/bettercatch.git"
+  },
   "devDependencies": {
     "typescript": "^5.9.2",
     "zshy": "^0.4.1",
