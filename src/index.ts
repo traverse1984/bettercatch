@@ -1,3 +1,8 @@
+export type error = typeof error;
+export type safe = typeof safe;
+export type safeAsync = typeof safeAsync;
+export type safePromise = typeof safePromise;
+
 export type Constructor = new (...args: any[]) => Error;
 export type Constructors = Constructor | [Constructor, ...Constructor[]];
 export type ConstructorType<T extends Constructors> = InstanceType<
@@ -74,7 +79,7 @@ export default error;
 /**
  * @TODO
  */
-export function error<E>(error: E): BetterCatchWithConstraint<never, E> {
+export function error<const E>(error: E): BetterCatchWithConstraint<never, E> {
   return BetterCatch.fromError(error);
 }
 
@@ -97,7 +102,7 @@ export function safeAsync<T>(
 /**
  * @TODO
  */
-export function safePromise<T>(
+export function safePromise<const T>(
   promise: PromiseLike<T>
 ): BetterCatchAsyncWithConstraint<T> {
   return BetterCatchAsync.safePromise(promise);
@@ -504,11 +509,6 @@ export class BetterCatchAsync<
 (BetterCatch.prototype as BetterCatchWithConstraint).constrain = constrain;
 (BetterCatchAsync.prototype as BetterCatchAsyncWithConstraint).constrain =
   constrain;
-
-Object.freeze(BetterCatch);
-Object.freeze(BetterCatchAsync);
-Object.freeze(BetterCatch.prototype);
-Object.freeze(BetterCatchAsync.prototype);
 
 function constrain(this: any): any {
   return this;

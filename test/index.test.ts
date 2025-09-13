@@ -40,18 +40,8 @@ describe("Exports", () => {
     expect(bc.BetterCatch).toBeTypeOf("function");
   });
 
-  test("Class BetterCatch and it's prototype are frozen", () => {
-    expect(Object.isFrozen(bc.BetterCatch)).toBe(true);
-    expect(Object.isFrozen(bc.BetterCatch.prototype)).toBe(true);
-  });
-
   test("Includes class BetterCatchAsync", () => {
     expect(bc.BetterCatchAsync).toBeTypeOf("function");
-  });
-
-  test("Class BetterCatchAsync and it's prototype are frozen", () => {
-    expect(Object.isFrozen(bc.BetterCatchAsync)).toBe(true);
-    expect(Object.isFrozen(bc.BetterCatch.prototype)).toBe(true);
   });
 });
 
@@ -157,8 +147,6 @@ describe("Functions", () => {
 });
 
 describe("BetterCatch", () => {
-  // When the contained value is the outcome of a successful function call
-  // or promise resolution
   describe("ok", () => {
     const error = new Error("BetterCatch (ok) test error");
     const ok = bc.safe(() => "test");
@@ -252,8 +240,6 @@ describe("BetterCatch", () => {
     });
   });
 
-  // When the contained value is  caught from a thrown error or promise
-  // rejection, or instantiated with the 'error' function
   describe("error", () => {
     class Error2 extends Error {}
     class Error3 extends Error2 {}
@@ -289,7 +275,7 @@ describe("BetterCatch", () => {
         expect(fn).toHaveBeenLastCalledWith(error3);
 
         expect(err.map([Error2, Error3, Error4, Error], fn).andReturn()).toBe(
-          true,
+          true
         );
         expect(fn).toHaveBeenLastCalledWith(error);
       });
@@ -317,7 +303,7 @@ describe("BetterCatch", () => {
             .map(Error2, fnSkip)
             .mapExact(Error2, fnSkip)
             .mapNonError(fnSkip)
-            .andReturn(),
+            .andReturn()
         ).toBe(true);
         expect(fn).toHaveBeenLastCalledWith(error2);
         expect(fnSkip).not.toHaveBeenCalled();
@@ -328,8 +314,8 @@ describe("BetterCatch", () => {
           capture(() =>
             err.map(Error, () => {
               throw error2;
-            }),
-          ),
+            })
+          )
         ).toBe(error2);
       });
     });
@@ -345,7 +331,7 @@ describe("BetterCatch", () => {
         expect(fn).toHaveBeenLastCalledWith(error2);
 
         expect(
-          err.mapExact([Error2, Error3, Error4, Error], fn).andReturn(),
+          err.mapExact([Error2, Error3, Error4, Error], fn).andReturn()
         ).toBe(true);
         expect(fn).toHaveBeenLastCalledWith(error);
       });
@@ -373,7 +359,7 @@ describe("BetterCatch", () => {
             .map(Error2, fnSkip)
             .mapExact(Error2, fnSkip)
             .mapNonError(fnSkip)
-            .andReturn(),
+            .andReturn()
         ).toBe(true);
         expect(fn).toHaveBeenLastCalledWith(error2);
         expect(fnSkip).not.toHaveBeenCalled();
@@ -384,8 +370,8 @@ describe("BetterCatch", () => {
           capture(() =>
             err.mapExact(Error, () => {
               throw error2;
-            }),
-          ),
+            })
+          )
         ).toBe(error2);
       });
     });
@@ -426,7 +412,7 @@ describe("BetterCatch", () => {
             .map(Error, fnSkip)
             .mapExact(Error, fnSkip)
             .mapNonError(fnSkip)
-            .andReturn(),
+            .andReturn()
         ).toBe(true);
         expect(fn).toHaveBeenLastCalledWith("test");
         expect(fnSkip).not.toHaveBeenCalled();
@@ -437,8 +423,8 @@ describe("BetterCatch", () => {
           capture(() =>
             bc.error(null).mapNonError(() => {
               throw error;
-            }),
-          ),
+            })
+          )
         ).toBe(error);
       });
     });
@@ -479,8 +465,8 @@ describe("BetterCatch", () => {
           capture(() =>
             err.andReturn(() => {
               throw error2;
-            }),
-          ),
+            })
+          )
         ).toBe(error2);
       });
     });
@@ -507,7 +493,7 @@ describe("BetterCatch", () => {
         expect(fnDefault).toHaveBeenLastCalledWith(error);
 
         expect(err2.map(Error3, fn).andMapReturn(fnReturn, fnDefault)).toBe(
-          true,
+          true
         );
         expect(fn).not.toHaveBeenCalled();
         expect(fnReturn).not.toHaveBeenCalled();
@@ -533,8 +519,8 @@ describe("BetterCatch", () => {
           capture(() =>
             err.map(Error, fn).andMapReturn(() => {
               throw error2;
-            }),
-          ),
+            })
+          )
         ).toBe(error2);
         expect(fn).toHaveBeenLastCalledWith(error);
       });
@@ -546,8 +532,8 @@ describe("BetterCatch", () => {
           capture(() =>
             err.andMapReturn(fnReturn, () => {
               throw error2;
-            }),
-          ),
+            })
+          )
         ).toBe(error2);
         expect(fnReturn).not.toHaveBeenCalled();
       });
@@ -593,7 +579,7 @@ describe("BetterCatch", () => {
         expect(fnDefault).toHaveBeenLastCalledWith(error);
 
         expect(capture(() => err2.map(Error3, fn).orThrow(fnDefault))).toBe(
-          error3,
+          error3
         );
         expect(fn).not.toHaveBeenCalled();
         expect(fnDefault).toHaveBeenLastCalledWith(error2);
@@ -625,7 +611,7 @@ describe("BetterCatch", () => {
         expect(fnDefault).toHaveBeenLastCalledWith(error);
 
         expect(capture(() => err2.map(Error3, fn).orThrow(fnDefault))).toBe(
-          error3,
+          error3
         );
         expect(fn).not.toHaveBeenCalled();
         expect(fnDefault).toHaveBeenLastCalledWith(error2);
@@ -649,8 +635,8 @@ describe("BetterCatch", () => {
           capture(() =>
             err.andThrow(() => {
               throw error2;
-            }),
-          ),
+            })
+          )
         ).toBe(error2);
       });
     });
@@ -662,7 +648,7 @@ describe("BetterCatch", () => {
         const fnDefault = vi.fn(() => error3);
 
         expect(
-          capture(() => err.map(Error, fn).andMapThrow(fnThrow, fnDefault)),
+          capture(() => err.map(Error, fn).andMapThrow(fnThrow, fnDefault))
         ).toBe(error2);
         expect(fn).toHaveBeenLastCalledWith(error);
         expect(fnThrow).toHaveBeenLastCalledWith("test");
@@ -679,7 +665,7 @@ describe("BetterCatch", () => {
         expect(fnDefault).toHaveBeenLastCalledWith(error);
 
         expect(
-          capture(() => err2.map(Error3, fn).andMapThrow(fnThrow, fnDefault)),
+          capture(() => err2.map(Error3, fn).andMapThrow(fnThrow, fnDefault))
         ).toBe(error4);
         expect(fn).not.toHaveBeenCalled();
         expect(fnThrow).not.toHaveBeenCalled();
@@ -694,7 +680,7 @@ describe("BetterCatch", () => {
         expect(fnThrow).not.toHaveBeenCalled();
 
         expect(capture(() => err2.map(Error3, fn).andMapThrow(fnThrow))).toBe(
-          error2,
+          error2
         );
         expect(fn).not.toHaveBeenCalled();
         expect(fnThrow).not.toHaveBeenCalled();
@@ -704,7 +690,7 @@ describe("BetterCatch", () => {
         const fnThrow = vi.fn(() => error);
 
         expect(capture(() => bc.error("test").andMapThrow(fnThrow))).toBe(
-          "test",
+          "test"
         );
         expect(fnThrow).not.toHaveBeenCalled();
       });
@@ -716,8 +702,8 @@ describe("BetterCatch", () => {
           capture(() =>
             err.map(Error, fn).andMapThrow(() => {
               throw error3;
-            }),
-          ),
+            })
+          )
         ).toBe(error3);
         expect(fn).toHaveBeenLastCalledWith(error);
       });
@@ -729,251 +715,723 @@ describe("BetterCatch", () => {
           capture(() =>
             err.andMapThrow(fnThrow, () => {
               throw error3;
-            }),
-          ),
+            })
+          )
         ).toBe(error3);
         expect(fnThrow).not.toHaveBeenCalled();
       });
     });
   });
 
-  // The result of calling safeAsync or safePromise
-  describe("async", async () => {
-    const caught = bc.safeAsync(async () => "test");
-    const resolved = await caught;
+  describe("BetterCatchAsync", () => {
+    describe("ok", async () => {
+      const error = new Error("BetterCatch (ok) test error");
+      const ok = bc.safePromise(Promise.resolve("test"));
+      const inner = await ok;
 
-    describe("constrain", () => {
-      test("Returns itself (noop, type info only)", () => {
-        expect(caught.constrain()).toBe(caught);
+      describe("constrain", () => {
+        test("Returns itself (noop, type info only)", () => {
+          expect(ok.constrain()).toBe(ok);
+        });
+      });
+
+      describe("map", () => {
+        test("Resolves to the original instance", async () => {
+          const fn = vi.fn(() => true);
+
+          await expect(ok.map(Error, fn)).resolves.toBe(inner);
+          expect(fn).not.toHaveBeenCalled();
+        });
+      });
+
+      describe("mapExact", () => {
+        test("Resolves to the original instance", async () => {
+          const fn = vi.fn(() => true);
+
+          await expect(ok.mapExact(Error, fn)).resolves.toBe(inner);
+          expect(fn).not.toHaveBeenCalled();
+        });
+      });
+
+      describe("mapNonError", () => {
+        test("Resolves to the original instance", async () => {
+          const fn = vi.fn(() => true);
+
+          await expect(ok.mapNonError(fn)).resolves.toBe(inner);
+          expect(fn).not.toHaveBeenCalled();
+        });
+      });
+
+      describe("andReturn", () => {
+        test("Resolves to the contained ok value", async () => {
+          const fn = vi.fn(() => true);
+
+          await expect(ok.andReturn(fn)).resolves.toBe("test");
+          expect(fn).not.toHaveBeenCalled();
+        });
+      });
+
+      describe("andMapReturn", () => {
+        test("Returns the contained ok value", async () => {
+          const fnMap = vi.fn(() => true);
+          const fnDefault = vi.fn(() => true);
+
+          await expect(ok.andMapReturn(fnMap, fnDefault)).resolves.toBe("test");
+          expect(fnMap).not.toHaveBeenCalled();
+          expect(fnDefault).not.toHaveBeenCalled();
+        });
+      });
+
+      describe("orRethrow", () => {
+        test("Resolves to the contained ok value", async () => {
+          await expect(ok.orRethrow()).resolves.toBe("test");
+        });
+      });
+
+      describe("orThrow", () => {
+        test("Resolves to the contained ok value", async () => {
+          const fn = vi.fn(() => error);
+
+          await expect(ok.orThrow(fn)).resolves.toBe("test");
+          expect(fn).not.toHaveBeenCalled();
+        });
+      });
+
+      describe("andThrow", () => {
+        test("Returns the contained ok value", async () => {
+          const fn = vi.fn(() => error);
+
+          await expect(ok.andThrow(fn)).resolves.toBe("test");
+          expect(fn).not.toHaveBeenCalled();
+        });
+      });
+
+      describe("andMapThrow", () => {
+        test("Returns the contained ok value", async () => {
+          const fnMap = vi.fn(() => error);
+          const fnDefault = vi.fn(() => error);
+
+          await expect(ok.andMapThrow(fnMap, fnDefault)).resolves.toBe("test");
+          expect(fnMap).not.toHaveBeenCalled();
+          expect(fnDefault).not.toHaveBeenCalled();
+        });
       });
     });
 
-    describe("map", () => {
-      test("Invokes the underlying map method", async () => {
-        const fn = () => true;
-        const spy = vi.spyOn(resolved, "map");
-        const mapped = await caught.map(Error, fn);
+    describe("error", () => {
+      class Error2 extends Error {}
+      class Error3 extends Error2 {}
+      class Error4 extends Error3 {}
 
-        expect(mapped).toBeInstanceOf(bc.BetterCatch);
-        expect(spy).toHaveBeenCalledExactlyOnceWith(Error, fn);
-        expect(spy).toHaveReturnedWith(mapped);
+      const error = new Error("BetterCatch (error) test error");
+      const error2 = new Error2("BetterCatch (error) test error 2");
+      const error3 = new Error3("BetterCatch (error) test error 3");
+      const error4 = new Error3("BetterCatch (error) test error 4");
+
+      const err = bc.safePromise(Promise.reject(error));
+      const err2 = bc.safePromise(Promise.reject(error2));
+      const err3 = bc.safePromise(Promise.reject(error3));
+      const nonError = bc.safePromise(Promise.reject("test"));
+
+      describe("constrain", () => {
+        test("Returns itself (noop, type info only)", () => {
+          expect(err.constrain()).toBe(err);
+        });
       });
-    });
 
-    describe("mapExact", () => {
-      test("Invokes the underlying mapExact method", async () => {
-        const fn = () => true;
-        const spy = vi.spyOn(resolved, "mapExact");
-        const mapped = await caught.mapExact(Error, fn);
+      describe("map", async () => {
+        test("Maps if the error is an instance of any of the provided classes", async () => {
+          const fn = vi.fn(() => true);
 
-        expect(mapped).toBeInstanceOf(bc.BetterCatch);
-        expect(spy).toHaveBeenCalledExactlyOnceWith(Error, fn);
-        expect(spy).toHaveReturnedWith(mapped);
+          await expect(err.map(Error, fn).andReturn()).resolves.toBe(true);
+          expect(fn).toHaveBeenLastCalledWith(error);
+
+          await expect(err2.map(Error, fn).andReturn()).resolves.toBe(true);
+          expect(fn).toHaveBeenLastCalledWith(error2);
+
+          await expect(err3.map(Error3, fn).andReturn()).resolves.toBe(true);
+          expect(fn).toHaveBeenLastCalledWith(error3);
+
+          await expect(
+            err.map([Error2, Error3, Error4, Error], fn).andReturn()
+          ).resolves.toBe(true);
+          expect(fn).toHaveBeenLastCalledWith(error);
+        });
+
+        test("Resolves to itself if the error is not an instance of any of the provided classes", async () => {
+          const fn = vi.fn(() => true);
+
+          await expect(err.map(Error2, fn)).resolves.toBe(await err);
+          expect(fn).not.toHaveBeenCalled();
+
+          await expect(err2.map([Error3, Error4], fn)).resolves.toBe(
+            await err2
+          );
+          expect(fn).not.toHaveBeenCalled();
+
+          await expect(nonError.map(Error, fn)).resolves.toBe(await nonError);
+          expect(fn).not.toHaveBeenCalled();
+        });
+
+        test("Does not execute further mappers once one has succeeded", async () => {
+          const fn = vi.fn(() => true);
+          const fnSkip = vi.fn(() => false);
+
+          await expect(
+            err2
+              .map(Error2, fn)
+              .map(Error2, fnSkip)
+              .mapExact(Error2, fnSkip)
+              .mapNonError(fnSkip)
+              .andReturn()
+          ).resolves.toBe(true);
+          expect(fn).toHaveBeenLastCalledWith(error2);
+          expect(fnSkip).not.toHaveBeenCalled();
+        });
+
+        test("Rejects with the error if the mapper throws", async () => {
+          await expect(
+            err.map(Error, () => {
+              throw error2;
+            })
+          ).rejects.toBe(error2);
+        });
       });
-    });
 
-    describe("mapNonError", () => {
-      test("Invokes the underlying mapNonError method", async () => {
-        const fn = () => true;
-        const spy = vi.spyOn(resolved, "mapNonError");
-        const mapped = await caught.mapNonError(fn);
+      describe("mapExact", () => {
+        test("Maps if the error is both an instance of and has the same constructor as any of the provided classes", async () => {
+          const fn = vi.fn(() => true);
 
-        expect(mapped).toBeInstanceOf(bc.BetterCatch);
-        expect(spy).toHaveBeenCalledExactlyOnceWith(fn);
-        expect(spy).toHaveReturnedWith(mapped);
+          await expect(err.mapExact(Error, fn).andReturn()).resolves.toBe(true);
+          expect(fn).toHaveBeenLastCalledWith(error);
+
+          await expect(err2.mapExact(Error2, fn).andReturn()).resolves.toBe(
+            true
+          );
+          expect(fn).toHaveBeenLastCalledWith(error2);
+
+          await expect(
+            err.mapExact([Error2, Error3, Error4, Error], fn).andReturn()
+          ).resolves.toBe(true);
+          expect(fn).toHaveBeenLastCalledWith(error);
+        });
+
+        test("Resolves to itself if the error is not an instance of any of the provided classes, or if it does not have the same constructor", async () => {
+          const fn = vi.fn(() => true);
+
+          await expect(err2.mapExact(Error, fn)).resolves.toBe(await err2);
+          expect(fn).not.toHaveBeenCalled();
+
+          await expect(err3.mapExact([Error, Error2], fn)).resolves.toBe(
+            await err3
+          );
+          expect(fn).not.toHaveBeenCalled();
+
+          await expect(nonError.mapExact(Error, fn)).resolves.toBe(
+            await nonError
+          );
+          expect(fn).not.toHaveBeenCalled();
+        });
+
+        test("Does not execute further mappers once one has succeeded", async () => {
+          const fn = vi.fn(() => true);
+          const fnSkip = vi.fn(() => false);
+
+          await expect(
+            err2
+              .mapExact(Error2, fn)
+              .map(Error2, fnSkip)
+              .mapExact(Error2, fnSkip)
+              .mapNonError(fnSkip)
+              .andReturn()
+          ).resolves.toBe(true);
+          expect(fn).toHaveBeenLastCalledWith(error2);
+          expect(fnSkip).not.toHaveBeenCalled();
+        });
+
+        test("Rejects with the error if the mapper throws", async () => {
+          await expect(
+            err.mapExact(Error, () => {
+              throw error2;
+            })
+          ).rejects.toBe(error2);
+        });
       });
-    });
 
-    describe("andReturn", () => {
-      test("Invokes the underlying andReturn method", async () => {
-        const fnDefault = () => true;
-        const spy = vi.spyOn(resolved, "andReturn");
-        const mapped = await caught.andReturn(fnDefault);
+      describe("mapNonError", () => {
+        test("Maps if the error is not an instance of Error", async () => {
+          const fn = vi.fn(() => true);
+          const object = {};
+          const map = new Map();
 
-        expect(mapped).toBe("test");
-        expect(spy).toHaveBeenCalledExactlyOnceWith(fnDefault);
-        expect(spy).toHaveReturnedWith(mapped);
+          await expect(nonError.mapNonError(fn).andReturn()).resolves.toBe(
+            true
+          );
+          expect(fn).toHaveBeenLastCalledWith("test");
+
+          await expect(
+            bc.safePromise(Promise.reject(object)).mapNonError(fn).andReturn()
+          ).resolves.toBe(true);
+          expect(fn).toHaveBeenLastCalledWith(object);
+
+          await expect(
+            bc.safePromise(Promise.reject(map)).mapNonError(fn).andReturn()
+          ).resolves.toBe(true);
+          expect(fn).toHaveBeenLastCalledWith(map);
+        });
+
+        test("Resolves to itself if the error is not an instance of any of the provided classes, or if it does not have the same constructor", async () => {
+          const fn = vi.fn(() => true);
+
+          await expect(err.mapNonError(fn).andReturn()).resolves.toBe(
+            undefined
+          );
+          expect(fn).not.toHaveBeenCalled();
+
+          await expect(err2.mapNonError(fn).andReturn()).resolves.toBe(
+            undefined
+          );
+          expect(fn).not.toHaveBeenCalled();
+        });
+
+        test("Does not execute further mappers once one has succeeded", async () => {
+          const fn = vi.fn(() => true);
+          const fnSkip = vi.fn(() => false);
+
+          await expect(
+            nonError
+              .mapNonError(fn)
+              .map(Error, fnSkip)
+              .mapExact(Error, fnSkip)
+              .mapNonError(fnSkip)
+              .andReturn()
+          ).resolves.toBe(true);
+          expect(fn).toHaveBeenLastCalledWith("test");
+          expect(fnSkip).not.toHaveBeenCalled();
+        });
+
+        test("Rejects with the error if the mapper throws", async () => {
+          await expect(
+            nonError.mapNonError(() => {
+              throw error;
+            })
+          ).rejects.toBe(error);
+        });
       });
-    });
 
-    describe("andMapReturn", () => {
-      test("Invokes the underlying andReturn method", async () => {
-        const fnMap = () => true;
-        const fnDefault = () => false;
-        const spy = vi.spyOn(resolved, "andMapReturn");
-        const mapped = await caught.andMapReturn(fnMap, fnDefault);
+      describe("andReturn", () => {
+        test("Resolves to the mapped value if a mapper was executed", async () => {
+          const fn = vi.fn(() => true);
+          const fnDefault = vi.fn(() => false);
 
-        expect(mapped).toBe("test");
-        expect(spy).toHaveBeenCalledExactlyOnceWith(fnMap, fnDefault);
-        expect(spy).toHaveReturnedWith(mapped);
+          await expect(err.map(Error, fn).andReturn(fnDefault)).resolves.toBe(
+            true
+          );
+          expect(fn).toHaveBeenLastCalledWith(error);
+          expect(fnDefault).not.toHaveBeenCalled();
+        });
+
+        test("Resolves to the result of the provided function if the value has not been mapped", async () => {
+          const fn = vi.fn(() => false);
+          const fnDefault = vi.fn(() => true);
+
+          await expect(err.andReturn(fnDefault)).resolves.toBe(true);
+          expect(fnDefault).toHaveBeenLastCalledWith(error);
+
+          await expect(err2.map(Error3, fn).andReturn(fnDefault)).resolves.toBe(
+            true
+          );
+          expect(fn).not.toHaveBeenCalled();
+          expect(fnDefault).toHaveBeenLastCalledWith(error2);
+        });
+
+        test("Resolves to undefined if the value has not been mapped and no default is provided", async () => {
+          const fn = vi.fn(() => true);
+
+          await expect(err.andReturn()).resolves.toBe(undefined);
+
+          await expect(err2.map(Error3, fn).andReturn()).resolves.toBe(
+            undefined
+          );
+          expect(fn).not.toHaveBeenCalled();
+        });
+
+        test("Rejects with the error if the default function throws", async () => {
+          await expect(
+            err.andReturn(() => {
+              throw error2;
+            })
+          ).rejects.toBe(error2);
+        });
       });
-    });
 
-    describe("orRethrow", () => {
-      test("Invokes the underlying orRethrow method", async () => {
-        const spy = vi.spyOn(resolved, "orRethrow");
-        const mapped = await caught.orRethrow();
+      describe("andMapReturn", () => {
+        test("Resolves to the result of the map function if a mapper has been executed", async () => {
+          const fn = vi.fn(() => "test");
+          const fnReturn = vi.fn(() => true);
+          const fnDefault = vi.fn(() => false);
 
-        expect(mapped).toBe("test");
-        expect(spy).toHaveBeenCalledExactlyOnceWith();
-        expect(spy).toHaveReturnedWith(mapped);
+          await expect(
+            err.map(Error, fn).andMapReturn(fnReturn, fnDefault)
+          ).resolves.toBe(true);
+          expect(fn).toHaveBeenLastCalledWith(error);
+          expect(fnReturn).toHaveBeenLastCalledWith("test");
+          expect(fnDefault).not.toHaveBeenCalled();
+        });
+
+        test("Resolves to the result of the default function if no mapper has been executed", async () => {
+          const fn = vi.fn(() => "test");
+          const fnReturn = vi.fn(() => false);
+          const fnDefault = vi.fn(() => true);
+
+          await expect(err.andMapReturn(fnReturn, fnDefault)).resolves.toBe(
+            true
+          );
+          expect(fnReturn).not.toHaveBeenCalled();
+          expect(fnDefault).toHaveBeenLastCalledWith(error);
+
+          await expect(
+            err2.map(Error3, fn).andMapReturn(fnReturn, fnDefault)
+          ).resolves.toBe(true);
+          expect(fn).not.toHaveBeenCalled();
+          expect(fnReturn).not.toHaveBeenCalled();
+          expect(fnDefault).toHaveBeenLastCalledWith(error2);
+        });
+
+        test("Resolves to undefined if no mapper has been executed and no default function is provided", async () => {
+          const fn = vi.fn(() => true);
+          const fnReturn = vi.fn(() => false);
+
+          await expect(err.andMapReturn(fnReturn)).resolves.toBe(undefined);
+          expect(fnReturn).not.toHaveBeenCalled();
+
+          await expect(
+            err2.map(Error3, fn).andMapReturn(fnReturn)
+          ).resolves.toBe(undefined);
+          expect(fn).not.toHaveBeenCalled();
+          expect(fnReturn).not.toHaveBeenCalled();
+        });
+
+        test("Rejects with the error if the map function throws", async () => {
+          const fn = vi.fn(() => true);
+
+          await expect(
+            err.map(Error, fn).andMapReturn(() => {
+              throw error2;
+            })
+          ).rejects.toBe(error2);
+          expect(fn).toHaveBeenLastCalledWith(error);
+        });
+
+        test("Rejects with the error if the default function throws", async () => {
+          const fnReturn = vi.fn(() => true);
+
+          await expect(
+            err.andMapReturn(fnReturn, () => {
+              throw error2;
+            })
+          ).rejects.toBe(error2);
+          expect(fnReturn).not.toHaveBeenCalled();
+        });
       });
-    });
 
-    describe("orThrow", () => {
-      test("Invokes the underlying orThrow method", async () => {
-        const fnDefault = () => new Error();
-        const spy = vi.spyOn(resolved, "orThrow");
-        const mapped = await caught.orThrow(fnDefault);
+      describe("orRethrow", () => {
+        test("Resolves to the mapped value if a mapper was executed", async () => {
+          const fn = vi.fn(() => true);
 
-        expect(mapped).toBe("test");
-        expect(spy).toHaveBeenCalledExactlyOnceWith(fnDefault);
-        expect(spy).toHaveReturnedWith(mapped);
+          await expect(err.map(Error, fn).orRethrow()).resolves.toBe(true);
+          expect(fn).toHaveBeenLastCalledWith(error);
+        });
+
+        test("Rejects with the original error if no mapper was executed", async () => {
+          const fn = vi.fn(() => true);
+
+          await expect(err.orRethrow()).rejects.toBe(error);
+
+          await expect(err2.map(Error3, fn).orRethrow()).rejects.toBe(error2);
+          expect(fn).not.toHaveBeenCalled();
+        });
+
+        test("Rejects with the original error value if it is not an instance of Error", async () => {
+          await expect(nonError.orRethrow()).rejects.toBe("test");
+        });
       });
-    });
 
-    describe("andThrow", () => {
-      test("Invokes the underlying andReturn method", async () => {
-        const fnDefault = () => new Error();
-        const spy = vi.spyOn(resolved, "andThrow");
-        const mapped = await caught.andThrow(fnDefault);
+      describe("orThrow", () => {
+        test("Resolves to the mapped value if a mapper was executed", async () => {
+          const fn = vi.fn(() => true);
+          const fnDefault = vi.fn(() => error2);
 
-        expect(mapped).toBe("test");
-        expect(spy).toHaveBeenCalledExactlyOnceWith(fnDefault);
-        expect(spy).toHaveReturnedWith(mapped);
+          await expect(err.map(Error, fn).orThrow(fnDefault)).resolves.toBe(
+            true
+          );
+          expect(fn).toHaveBeenLastCalledWith(error);
+          expect(fnDefault).not.toHaveBeenCalled();
+        });
+
+        test("Rejects with the result of the default function if no mapper was executed", async () => {
+          const fn = vi.fn(() => true);
+          const fnDefault = vi.fn(() => error3);
+
+          await expect(err.orThrow(fnDefault)).rejects.toBe(error3);
+          expect(fnDefault).toHaveBeenLastCalledWith(error);
+
+          await expect(err2.map(Error3, fn).orThrow(fnDefault)).rejects.toBe(
+            error3
+          );
+          expect(fn).not.toHaveBeenCalled();
+          expect(fnDefault).toHaveBeenLastCalledWith(error2);
+        });
+
+        test("Rejects with the error if the default function throws", async () => {
+          const fnDefault = vi.fn(() => error2);
+
+          await expect(err.orThrow(fnDefault)).rejects.toBe(error2);
+          expect(fnDefault).toHaveBeenLastCalledWith(error);
+        });
       });
-    });
 
-    describe("andMapThrow", () => {
-      test("Invokes the underlying andMapThrow method", async () => {
-        const fnMap = () => new Error();
-        const fnDefault = () => new Error();
-        const spy = vi.spyOn(resolved, "andMapThrow");
-        const mapped = await caught.andMapThrow(fnMap, fnDefault);
+      describe("andThrow", () => {
+        test("Rejects with the mapped value if a mapper was executed", async () => {
+          const fn = vi.fn(() => error2);
+          const fnDefault = vi.fn(() => error3);
 
-        expect(mapped).toBe("test");
-        expect(spy).toHaveBeenCalledExactlyOnceWith(fnMap, fnDefault);
-        expect(spy).toHaveReturnedWith(mapped);
+          await expect(err.map(Error, fn).andThrow()).rejects.toBe(error2);
+          expect(fn).toHaveBeenLastCalledWith(error);
+          expect(fnDefault).not.toHaveBeenCalled();
+        });
+
+        test("Rejects with the result of the default function if no mapper was executed", async () => {
+          const fn = vi.fn(() => error2);
+          const fnDefault = vi.fn(() => error3);
+
+          await expect(err.andThrow(fnDefault)).rejects.toBe(error3);
+          expect(fnDefault).toHaveBeenLastCalledWith(error);
+
+          await expect(err2.map(Error3, fn).orThrow(fnDefault)).rejects.toBe(
+            error3
+          );
+          expect(fn).not.toHaveBeenCalled();
+          expect(fnDefault).toHaveBeenLastCalledWith(error2);
+        });
+
+        test("Rejects with the original error if no mapper was executed and no default function is provided", async () => {
+          const fn = vi.fn(() => error2);
+
+          await expect(err.andThrow()).rejects.toBe(error);
+
+          await expect(err2.map(Error3, fn).andThrow()).rejects.toBe(error2);
+          expect(fn).not.toHaveBeenCalled();
+        });
+
+        test("Rejects with the original error value if it is not an instance of Error", async () => {
+          await expect(nonError.andThrow()).rejects.toBe("test");
+        });
+
+        test("Rejects with the error if the default function throws", async () => {
+          await expect(
+            err.andThrow(() => {
+              throw error2;
+            })
+          ).rejects.toBe(error2);
+        });
+      });
+
+      describe("andMapThrow", () => {
+        test("Rejects with the result of the map function if a mapper has been executed", async () => {
+          const fn = vi.fn(() => "test");
+          const fnThrow = vi.fn(() => error2);
+          const fnDefault = vi.fn(() => error3);
+
+          await expect(
+            err.map(Error, fn).andMapThrow(fnThrow, fnDefault)
+          ).rejects.toBe(error2);
+          expect(fn).toHaveBeenLastCalledWith(error);
+          expect(fnThrow).toHaveBeenLastCalledWith("test");
+          expect(fnDefault).not.toHaveBeenCalled();
+        });
+
+        test("Rejects with the result of the default function if no mapper has been executed", async () => {
+          const fn = vi.fn(() => "test");
+          const fnThrow = vi.fn(() => error3);
+          const fnDefault = vi.fn(() => error4);
+
+          await expect(err.andMapThrow(fnThrow, fnDefault)).rejects.toBe(
+            error4
+          );
+          expect(fnThrow).not.toHaveBeenCalled();
+          expect(fnDefault).toHaveBeenLastCalledWith(error);
+
+          await expect(
+            err2.map(Error3, fn).andMapThrow(fnThrow, fnDefault)
+          ).rejects.toBe(error4);
+          expect(fn).not.toHaveBeenCalled();
+          expect(fnThrow).not.toHaveBeenCalled();
+          expect(fnDefault).toHaveBeenLastCalledWith(error2);
+        });
+
+        test("Rejects with the original error if no mapper was executed and no default function is provided", async () => {
+          const fn = vi.fn(() => error2);
+          const fnThrow = vi.fn(() => error3);
+
+          await expect(err.andMapThrow(fnThrow)).rejects.toBe(error);
+          expect(fnThrow).not.toHaveBeenCalled();
+
+          await expect(err2.map(Error3, fn).andMapThrow(fnThrow)).rejects.toBe(
+            error2
+          );
+          expect(fn).not.toHaveBeenCalled();
+          expect(fnThrow).not.toHaveBeenCalled();
+        });
+
+        test("Rejects with the original error value if it is not an instance of Error", async () => {
+          const fnThrow = vi.fn(() => error);
+
+          await expect(nonError.andMapThrow(fnThrow)).rejects.toBe("test");
+          expect(fnThrow).not.toHaveBeenCalled();
+        });
+
+        test("Rejects with the error if the map function throws", async () => {
+          const fn = vi.fn(() => error2);
+
+          await expect(
+            err.map(Error, fn).andMapThrow(() => {
+              throw error3;
+            })
+          ).rejects.toBe(error3);
+          expect(fn).toHaveBeenLastCalledWith(error);
+        });
+
+        test("Rejects with the error if the default function throws", async () => {
+          const fnThrow = vi.fn(() => error2);
+
+          await expect(
+            err.andMapThrow(fnThrow, () => {
+              throw error3;
+            })
+          ).rejects.toBe(error3);
+          expect(fnThrow).not.toHaveBeenCalled();
+        });
       });
     });
   });
-});
 
-describe("Method chaining", () => {
-  class Error2 extends Error {}
-  class Error3 extends Error2 {}
-  class Error4 extends Error {}
+  describe("Method chaining", () => {
+    class Error2 extends Error {}
+    class Error3 extends Error2 {}
+    class Error4 extends Error {}
 
-  const fnMap = (err: Error) => `map: ${err.message}`;
-  const fnMapExact = (err: Error) => `mapExact: ${err.message}`;
-  const fnMapExact2 = () => "mapExact2: never";
-  const fnMapNonError = (value: unknown) => `mapNonError: ${value}`;
-  const fnReturn = (value: string) => `return: ${value}`;
-  const fnDefault = (value: unknown) => `default: ${value}`;
+    const fnMap = (err: Error) => `map: ${err.message}`;
+    const fnMapExact = (err: Error) => `mapExact: ${err.message}`;
+    const fnMapExact2 = () => "mapExact2: never";
+    const fnMapNonError = (value: unknown) => `mapNonError: ${value}`;
+    const fnReturn = (value: string) => `return: ${value}`;
+    const fnDefault = (value: unknown) => `default: ${value}`;
 
-  describe("sync", () => {
-    function map(caught: bc.BetterCatch<any, any>): any {
-      return caught
-        .mapExact(Error, fnMapExact)
-        .map(Error2, fnMap)
-        .mapExact(Error3, fnMapExact2)
-        .mapNonError(fnMapNonError)
-        .andMapReturn(fnReturn, fnDefault);
-    }
+    describe("sync", () => {
+      function map(caught: bc.BetterCatch<any, any>): any {
+        return caught
+          .mapExact(Error, fnMapExact)
+          .map(Error2, fnMap)
+          .mapExact(Error3, fnMapExact2)
+          .mapNonError(fnMapNonError)
+          .andMapReturn(fnReturn, fnDefault);
+      }
 
-    test("Correctly maps an ok outcome", () => {
-      expect(map(bc.safe(() => "ok"))).toBe("ok");
-    });
-
-    test("Correctly maps an Error instance (map exact, map return)", () => {
-      const error = new Error("test");
-      const expected = fnReturn(fnMapExact(error));
-
-      expect(map(bc.error(error))).toBe(expected);
-    });
-
-    test("Correctly maps an Error2 instance (map, map return)", () => {
-      const error = new Error2("test");
-      const expected = fnReturn(fnMap(error));
-
-      expect(map(bc.error(error))).toBe(expected);
-    });
-
-    test("Correctly maps an Error3 instance (map, map return)", () => {
-      const error = new Error3("test");
-      const expected = fnReturn(fnMap(error));
-
-      expect(map(bc.error(error))).toBe(expected);
-    });
-
-    test("Correctly maps an Error4 instance (default return)", () => {
-      const error = new Error4("test");
-      const expected = fnDefault(error);
-
-      expect(map(bc.error(error))).toBe(expected);
-    });
-
-    test("Correctly maps a non-error value (map non-error, map return)", () => {
-      const error = "non error";
-      const expected = fnReturn(fnMapNonError(error));
-
-      expect(map(bc.error(error))).toBe(expected);
-    });
-  });
-
-  describe("async", () => {
-    function map(caught: bc.BetterCatchAsync<any, any>): Promise<any> {
-      return caught
-        .mapExact(Error, fnMapExact)
-        .map(Error2, fnMap)
-        .mapExact(Error3, fnMapExact2)
-        .mapNonError(fnMapNonError)
-        .andMapReturn(fnReturn, fnDefault);
-    }
-
-    function caughtAsync(value: unknown): bc.BetterCatchAsync<any, any> {
-      return bc.safeAsync(async () => {
-        throw value;
+      test("Correctly maps an ok outcome", () => {
+        expect(map(bc.safe(() => "ok"))).toBe("ok");
       });
-    }
 
-    test("Correctly maps an ok outcome", async () => {
-      await expect(map(bc.safeAsync(async () => "ok"))).resolves.toBe("ok");
+      test("Correctly maps an Error instance (map exact, map return)", () => {
+        const error = new Error("test");
+        const expected = fnReturn(fnMapExact(error));
+
+        expect(map(bc.error(error))).toBe(expected);
+      });
+
+      test("Correctly maps an Error2 instance (map, map return)", () => {
+        const error = new Error2("test");
+        const expected = fnReturn(fnMap(error));
+
+        expect(map(bc.error(error))).toBe(expected);
+      });
+
+      test("Correctly maps an Error3 instance (map, map return)", () => {
+        const error = new Error3("test");
+        const expected = fnReturn(fnMap(error));
+
+        expect(map(bc.error(error))).toBe(expected);
+      });
+
+      test("Correctly maps an Error4 instance (default return)", () => {
+        const error = new Error4("test");
+        const expected = fnDefault(error);
+
+        expect(map(bc.error(error))).toBe(expected);
+      });
+
+      test("Correctly maps a non-error value (map non-error, map return)", () => {
+        const error = "non error";
+        const expected = fnReturn(fnMapNonError(error));
+
+        expect(map(bc.error(error))).toBe(expected);
+      });
     });
 
-    test("Correctly maps an Error instance (map exact, map return)", async () => {
-      const error = new Error("test");
-      const expected = fnReturn(fnMapExact(error));
+    describe("async", () => {
+      function map(caught: bc.BetterCatchAsync<any, any>): Promise<any> {
+        return caught
+          .mapExact(Error, fnMapExact)
+          .map(Error2, fnMap)
+          .mapExact(Error3, fnMapExact2)
+          .mapNonError(fnMapNonError)
+          .andMapReturn(fnReturn, fnDefault);
+      }
 
-      await expect(map(caughtAsync(error))).resolves.toBe(expected);
-    });
+      function caughtAsync(value: unknown): bc.BetterCatchAsync<any, any> {
+        return bc.safeAsync(async () => {
+          throw value;
+        });
+      }
 
-    test("Correctly maps an Error2 instance (map, map return)", async () => {
-      const error = new Error2("test");
-      const expected = fnReturn(fnMap(error));
+      test("Correctly maps an ok outcome", async () => {
+        await expect(map(bc.safeAsync(async () => "ok"))).resolves.toBe("ok");
+      });
 
-      await expect(map(caughtAsync(error))).resolves.toBe(expected);
-    });
+      test("Correctly maps an Error instance (map exact, map return)", async () => {
+        const error = new Error("test");
+        const expected = fnReturn(fnMapExact(error));
 
-    test("Correctly maps an Error3 instance (map, map return)", async () => {
-      const error = new Error3("test");
-      const expected = fnReturn(fnMap(error));
+        await expect(map(caughtAsync(error))).resolves.toBe(expected);
+      });
 
-      await expect(map(caughtAsync(error))).resolves.toBe(expected);
-    });
+      test("Correctly maps an Error2 instance (map, map return)", async () => {
+        const error = new Error2("test");
+        const expected = fnReturn(fnMap(error));
 
-    test("Correctly maps an Error4 instance (default return)", async () => {
-      const error = new Error4("test");
-      const expected = fnDefault(error);
+        await expect(map(caughtAsync(error))).resolves.toBe(expected);
+      });
 
-      await expect(map(caughtAsync(error))).resolves.toBe(expected);
-    });
+      test("Correctly maps an Error3 instance (map, map return)", async () => {
+        const error = new Error3("test");
+        const expected = fnReturn(fnMap(error));
 
-    test("Correctly maps a non-error value (map non-error, map return)", async () => {
-      const error = "non error";
-      const expected = fnReturn(fnMapNonError(error));
+        await expect(map(caughtAsync(error))).resolves.toBe(expected);
+      });
 
-      await expect(map(caughtAsync(error))).resolves.toBe(expected);
+      test("Correctly maps an Error4 instance (default return)", async () => {
+        const error = new Error4("test");
+        const expected = fnDefault(error);
+
+        await expect(map(caughtAsync(error))).resolves.toBe(expected);
+      });
+
+      test("Correctly maps a non-error value (map non-error, map return)", async () => {
+        const error = "non error";
+        const expected = fnReturn(fnMapNonError(error));
+
+        await expect(map(caughtAsync(error))).resolves.toBe(expected);
+      });
     });
   });
 });
